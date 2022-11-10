@@ -37,8 +37,14 @@ return [
 
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => env('MONGODB_DSN'),
+            'host' => env('MONGODB_HOST'),
+            'port' => env('MONGODB_PORT'),
+            'username' => env('MONGODB_ROOT_USERNAME'),
+            'password' => env('MONGODB_ROOT_PASSWORD'),
             'database' => env('MONGODB_DATABASE'),
+            'options' => [
+                'database' => env('MONGODB_AUTHENTICATION_DATABASE', 'admin')
+            ]
         ],
 
         'sqlite' => [

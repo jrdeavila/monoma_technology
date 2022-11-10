@@ -14,13 +14,16 @@ class User extends AuthUser implements JWTSubject
 
     protected  $collection = "users";
     protected $connection = "mongodb";
+    public $timestamps = false;
 
     protected $fillable = [
         'username',
         'password',
         'is_active',
+        'last_login',
         'role',
     ];
+
 
 
     public function getJWTCustomClaims()
@@ -57,5 +60,17 @@ class User extends AuthUser implements JWTSubject
             ['new' => true, 'upsert' => true, 'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER]
         );
         return $seq->seq;
+    }
+    public static function createByDomainModel(\Src\BoundedContext\User\Domain\User $user): self
+    {
+        $nuser = new self();
+        $nuser->_id = $user->getId()->value();
+        $nuser->ref = $user->getId()->value();
+        $nuser->username = $user->getUsername()->value();
+        $nuser->password = $user->getPassword()->value();
+        $nuser->is_active = $user->getIs_Active()->value();
+        $nuser->last_login = $user->getLast_Login()->value();
+        $nuser->role = $user->getRole()->value();
+        return $nuser;
     }
 }

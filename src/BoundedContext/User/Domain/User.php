@@ -40,47 +40,45 @@ final class User
     /**
      * Get the value of id
      */
-    public function getId()
+    public function getId(): UserId
     {
         return $this->id;
     }
+
 
     /**
      * Set the value of id
      *
      * @return  self
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 
     /**
      * Get the value of username
      */
-    public function getUsername()
+    public function getUsername(): UserName
     {
         return $this->username;
     }
+
 
     /**
      * Set the value of username
      *
      * @return  self
      */
-    public function setUsername($username)
+    public function setUsername($username): void
     {
         $this->username = $username;
-
-        return $this;
     }
 
     /**
      * Get the value of password
      */
-    public function getPassword()
+    public function getPassword(): UserPassword
     {
         return $this->password;
     }
@@ -90,17 +88,15 @@ final class User
      *
      * @return  self
      */
-    public function setPassword($password)
+    public function setPassword($password): void
     {
         $this->password = $password;
-
-        return $this;
     }
 
     /**
      * Get the value of last_login
      */
-    public function getLast_login()
+    public function getLast_login(): UserLastLogin
     {
         return $this->last_login;
     }
@@ -110,17 +106,15 @@ final class User
      *
      * @return  self
      */
-    public function setLast_login($last_login)
+    public function setLast_login(UserLastLogin $last_login): void
     {
         $this->last_login = $last_login;
-
-        return $this;
     }
 
     /**
      * Get the value of is_active
      */
-    public function getIs_active()
+    public function getIs_active(): UserIsActive
     {
         return $this->is_active;
     }
@@ -130,17 +124,15 @@ final class User
      *
      * @return  self
      */
-    public function setIs_active($is_active)
+    public function setIs_active($is_active): void
     {
         $this->is_active = $is_active;
-
-        return $this;
     }
 
     /**
      * Get the value of role
      */
-    public function getRole()
+    public function getRole(): UserRole
     {
         return $this->role;
     }
@@ -150,11 +142,9 @@ final class User
      *
      * @return  self
      */
-    public function setRole($role)
+    public function setRole($role): void
     {
         $this->role = $role;
-
-        return $this;
     }
 
 
@@ -183,7 +173,7 @@ final class User
             'username' => $this->username->value(),
             'password' => $this->password->value(),
             'role' => $this->role->value(),
-            'last_login' => $this->last_login->value(),
+            'last_login' => $this->last_login->value()?->format('Y-m-d H:i:s'),
             'is_active' => $this->is_active->value(),
         ];
     }

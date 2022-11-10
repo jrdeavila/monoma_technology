@@ -10,9 +10,9 @@ final class UserLastLogin
 {
     private $value;
 
-    public function __construct(?DateTime $password)
+    public function __construct(?DateTime $dateTime)
     {
-        $this->value = $password;
+        $this->value = $dateTime;
     }
 
     public function value(): ?DateTime

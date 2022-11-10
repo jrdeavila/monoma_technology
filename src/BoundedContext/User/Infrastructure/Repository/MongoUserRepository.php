@@ -2,6 +2,7 @@
 
 namespace Src\BoundedContext\User\Infrastructure\Repository;
 
+
 use Src\BoundedContext\User\Domain\Contract\UserRepositoryContract;
 use App\Models\User as MongoUser;
 use Src\BoundedContext\User\Domain\User;
@@ -28,7 +29,7 @@ class MongoUserRepository implements UserRepositoryContract
             new UserName($model->username),
             new UserPassword($model->password),
             new UserRole($model->role),
-            new UserLastLogin($model->last_login),
+            new UserLastLogin($model->last_login ? new \DateTime($model->last_login) : null),
             new UserIsActive($model->is_active)
         );
     }
@@ -53,16 +54,11 @@ class MongoUserRepository implements UserRepositoryContract
 
     public function update(UserId $id, User $user): void
     {
-        $data = [
-            'username' => $user->getUsername()->value(),
-            'role' => $user->getRole()->value(),
-            'is_active' => $user->getIs_Active()->value(),
-        ];
-        $this->model->findOrFail($id->value())->update($data);
+        $this->model->where('ref', '=', $id->value())->firstOrFail()->update($user->toArray());
     }
 
     public function delete(UserId $id): void
     {
-        $this->model->findOrFail($id->value())->delete();
+        $this->model->where('ref', '=', $id->value())->firstOrFail()->delete();
     }
 }
