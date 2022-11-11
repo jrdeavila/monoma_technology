@@ -7,11 +7,9 @@ namespace Src\BoundedContext\User\Infrastructure;
 use App\Exceptions\PasswordIncorrectException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\LoginResource;
-use App\Models\User as MongoUser;
-use Illuminate\Support\Facades\Hash;
-use Src\BoundedContext\User\Application\GetUserByCredentialUseCase;
-use Src\BoundedContext\User\Infrastructure\Jobs\UpdateUser;
+use Src\BoundedContext\User\Application\UpdateUserUseCase;
 use Src\BoundedContext\User\Infrastructure\Repository\MongoUserRepository;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 final class LoginUserController
 {
@@ -22,15 +20,21 @@ final class LoginUserController
         $this->repository = $repository;
     }
 
-    public function __invoke(LoginRequest $request)
+    public function __invoke(LoginRequest $request): string
     {
-        $getUser = new GetUserByCredentialUseCase($this->repository);
-        $user = $getUser->__invoke($request->username);
-        if (Hash::check($request->password, $user->getPassword()->value())) {
-            UpdateUser::dispatch($user, $this->repository);
-            $model = MongoUser::createByDomainModel($user);
-            return new LoginResource($model);
+        if ($token = JWTAuth::attempt($request->all())) {
+            $user = JWTAuth::user();
+            $uc = new UpdateUserUseCase($this->repository);
+            $uc->__invoke(
+                $user->_id,
+                $user->username,
+                $user->password,
+                $user->role,
+                $user->is_active,
+                new \DateTime('now')
+            );
+            return $token;
         }
-        throw new PasswordIncorrectException($user->getUserName()->value());
+        throw new PasswordIncorrectException($request->get('username'));
     }
 }

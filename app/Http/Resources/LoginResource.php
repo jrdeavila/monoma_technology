@@ -15,14 +15,13 @@ class LoginResource extends JsonResource
      */
     public function toArray($request)
     {
-        $token = Auth::login($this->resource);
         return [
             'meta' => [
                 'success' => true,
                 'errors' => [],
             ],
             'data' => [
-                'token' => $token,
+                'token' => $this->resource,
                 'minutes_to_expire' => env('JWT_TTL'),
             ],
         ];

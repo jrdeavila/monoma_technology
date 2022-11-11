@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
@@ -50,6 +51,9 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof ModelNotFoundException) {
             throw new ResourceNotFoundException();
+        }
+        if ($e instanceof AuthorizationException) {
+            throw new LeadOwnerException();
         }
         return parent::render($request, $e);
     }

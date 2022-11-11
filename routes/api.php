@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\LoginUserController;
+use App\Http\Controllers\LeadController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/auth', LoginUserController::class);
+Route::post('/auth', AuthController::class)->name('login');
+Route::middleware(['jwt.verify'])->group(function () {
+    Route::apiResource('lead', LeadController::class)
+        ->parameter('', 'id')->names('lead')->only([
+            'store', 'show'
+        ]);
+    Route::get('leads', [LeadController::class, 'index'])->name('lead.index');
+});

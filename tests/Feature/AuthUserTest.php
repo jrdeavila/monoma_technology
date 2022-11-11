@@ -17,7 +17,7 @@ class AuthUserTest extends TestCase
     public function test_login_successfull()
     {
 
-        $response = $this->post('/auth', [
+        $response = $this->post(route('login'), [
             'username' => 'tester',
             'password' => 'PASSWORD'
         ]);
@@ -40,7 +40,7 @@ class AuthUserTest extends TestCase
     public function test_login_password_invalid()
     {
 
-        $response = $this->post('/auth', [
+        $response = $this->post(route('login'), [
             'username' => 'tester',
             'password' => 'xxxxxx'
         ]);
@@ -60,35 +60,11 @@ class AuthUserTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_login_user_not_found()
-    {
-
-        $response = $this->post('/auth', [
-            'username' => 'ramdon',
-            'password' => 'xxxxxx'
-        ]);
-
-        $response->assertJsonStructure(
-            [
-                'meta' => [
-                    'success',
-                    'errors' => [
-                        0,
-                    ],
-                ],
-
-            ]
-        );
-
-
-        $response->assertStatus(404);
-    }
-
 
     public function test_login_without_body()
     {
 
-        $response = $this->post('/auth');
+        $response = $this->post(route('login'));
 
         $response->assertJsonStructure(
             [

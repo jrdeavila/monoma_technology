@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Src\BoundedContext\User\Application\CreateUserUseCase;
+use Src\BoundedContext\User\Infrastructure\Repository\MongoUserRepository;
 
 class UserSeeder extends Seeder
 {
@@ -17,31 +16,28 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::connection('mongodb')->getCollection('users')->drop();
-        $manager = new User;
-        $manager->nextid();
-        $manager->username = "tester";
-        $manager->password = Hash::make("PASSWORD");
-        $manager->role = "mananger";
-        $manager->is_active = true;
-        $manager->save();
+        $repository = new MongoUserRepository();
+        $useCase = new CreateUserUseCase($repository);
 
-        $agent = new User;
-        $agent->nextid();
-        $agent->username = "agtester";
-        $agent->password = Hash::make("PASSWORD");
-        $agent->role = "agent";
-        $agent->is_active = true;
-        $agent->last_login = null;
-        $agent->save();
-
-        $agent = new User;
-        $agent->nextid();
-        $agent->username = "agtester2";
-        $agent->password = Hash::make("PASSWORD");
-        $agent->role = "agent";
-        $agent->is_active = true;
-        $agent->last_login = null;
-        $agent->save();
+        $useCase->__invoke(
+            'tester',
+            Hash::make('PASSWORD'),
+            'manager',
+        );
+        $useCase->__invoke(
+            'tester2',
+            Hash::make('PASSWORD'),
+            'manager',
+        );
+        $useCase->__invoke(
+            'agtester',
+            Hash::make('PASSWORD'),
+            'agent',
+        );
+        $useCase->__invoke(
+            'agtester2',
+            Hash::make('PASSWORD'),
+            'agent',
+        );
     }
 }

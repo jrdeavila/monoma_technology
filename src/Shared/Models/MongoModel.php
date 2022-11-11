@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace Src\Shared\Models;
 
-use Illuminate\Support\Facades\DB;
 use Jenssegers\Mongodb\Eloquent\Model;
-use MongoDB\Operation\FindOneAndUpdate;
 
 abstract class MongoModel extends Model
 {
